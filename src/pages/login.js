@@ -1,7 +1,7 @@
 import React from 'react'
 import { CustomTheme } from '../lib/custom-theme'
 import withLayout from '../layout/withLayout'
-import { setCustomTheme } from '../lib/utils'
+import { setCustomTheme, saveLoginCredentials } from '../lib/utils'
 
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
@@ -33,13 +33,28 @@ function Page() {
 
     const handleSignIn = () => {
 
+        let error = false;
+
         if(!login || login.length < 3) {
+            error = true
             setLoginError(true)
         }
 
         if(!password || password.length < 8) {
+            error = true
             setPasswordError(true)
         }
+
+        if(error) return
+
+        const newlogin = {
+            login: login,
+            password: password
+        }
+
+        saveLoginCredentials(newlogin)
+
+        window.location.href = "/"
 
     }
 

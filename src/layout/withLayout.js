@@ -4,23 +4,23 @@ import SettingsIcon from '@mui/icons-material/Settings'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Container from '@mui/material/Container'
+//import Container from '@mui/material/Container'
 
 import Button from '@mui/material/Button'
-import ButtonGroup from '@mui/material/ButtonGroup'
+//import ButtonGroup from '@mui/material/ButtonGroup'
 
 import Typography from '@mui/material/Typography'
 
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
+//import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
-import FormGroup from '@mui/material/FormGroup'
+//import FormGroup from '@mui/material/FormGroup'
 
 import RadioGroup from '@mui/material/RadioGroup'
 import Radio from '@mui/material/Radio'
@@ -59,7 +59,7 @@ export default function withLayout(WrappedComponent) {
 
         render() {
 
-            console.log("render me")
+            //console.log("render me")
             
             const [value, setValue] = this.context
 
@@ -97,7 +97,7 @@ export default function withLayout(WrappedComponent) {
                             </IconButton>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={2}>
+                    <Grid container>
                         <Grid item xs={12}>
                             <Box>
                                 <WrappedComponent {...this.props} />

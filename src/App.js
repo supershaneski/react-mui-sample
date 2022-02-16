@@ -35,7 +35,7 @@ function App() {
   
   const handleDisplayCustom = (mode) => {
 
-    console.log("mode", mode)
+    //console.log("mode", mode)
 
     setCustomTheme(mode)
     setDisplayCustom(mode)
