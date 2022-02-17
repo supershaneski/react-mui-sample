@@ -1,11 +1,9 @@
 import React from 'react'
-import { CustomTheme } from '../lib/custom-theme'
 import withLayout from '../layout/withLayout'
-import { setCustomTheme, saveLoginCredentials } from '../lib/utils'
+import { getLoginCredentials, saveLoginCredentials } from '../lib/utils'
 
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 
@@ -15,44 +13,60 @@ import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 
-import CloseIcon from '@mui/icons-material/Close'
-import ClearIcon from '@mui/icons-material/Clear'
 import CancelIcon from '@mui/icons-material/Cancel'
 import VisibleIcon from '@mui/icons-material/Visibility'
 import NotVisibleIcon from '@mui/icons-material/VisibilityOff'
-import LockIcon from '@mui/icons-material/LockOutlined'
+
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 function Page() {
 
     const [login, setLogin] = React.useState("")
     const [password, setPassword] = React.useState("")
-    const [loginError, setLoginError] = React.useState(false)
-    const [passwordError, setPasswordError] = React.useState(false)
+    const [loginError, setLoginError] = React.useState("")
+    const [passwordError, setPasswordError] = React.useState("")
     const [isRemember, setIsRemember] = React.useState(false)
     const [isVisible, setIsVisible] = React.useState(false)
+
+    const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"))
+
+    React.useEffect(() => {
+
+        const token = getLoginCredentials(true)
+        if(token) {
+
+            setLogin(token?.login)
+            setPassword(token?.password)
+
+        }
+
+    }, [])
 
     const handleSignIn = () => {
 
         let error = false;
 
-        if(!login || login.length < 3) {
+        const slogin = login.trim()
+        const spassword = password.trim()
+
+        if(slogin.length < 6) {
             error = true
-            setLoginError(true)
+            setLoginError(slogin.length === 0 ? "Please enter your login" : "Invalid login")
         }
 
-        if(!password || password.length < 8) {
+        if(spassword.length < 8) {
             error = true
-            setPasswordError(true)
+            setPasswordError((slogin.length > 0 && spassword.length === 0) ? "Please enter your password" : "Invalid password")
         }
 
         if(error) return
 
         const newlogin = {
-            login: login,
-            password: password
+            login: slogin,
+            password: spassword
         }
 
-        saveLoginCredentials(newlogin)
+        saveLoginCredentials(newlogin, isRemember)
 
         window.location.href = "/"
 
@@ -61,21 +75,21 @@ function Page() {
     const handleLogin = (e) => {
 
         setLogin(e.target.value)
-        setLoginError(false)
+        setLoginError("")
 
     }
 
     const handlePassword = (e) => {
 
         setPassword(e.target.value)
-        setPasswordError(false)
+        setPasswordError("")
 
     }
 
     const handleClear = () => {
 
         setLogin("")
-        setLoginError(false)
+        setLoginError("")
 
     }
 
@@ -86,35 +100,37 @@ function Page() {
     }
 
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={0} sm={3}></Grid>
-            <Grid item xs={12} sm={6}>
+        <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}>
+            <Box sx={{width: {xs: '100%', sm: 450 }}}>
                 <Box sx={{
-                    //backgroundColor: '#faed23',
                     padding: {xs: 0, sm: '3em 0'},
                     display: 'flex',
                     alignItems: 'center',
                 }}>
-                    <Paper sx={{
-                        width: '100%',
-                        boxShadow: { xs: 0, sm: 1 }
-                    }}>
+                    <Paper 
+                        sx={{
+                            width: '100%',
+                        }}
+                        elevation={matches ? 1 : 0}
+                    >
                         <Box sx={{
                             padding: { xs: 3, sm: 5 },
                         }}>
                             <Typography variant="h5" sx={{marginBottom: 2}}>Sign In</Typography>
                             <FormGroup>
-                                <InputBase error={loginError} endAdornment={
+                                <InputBase error={loginError ? true : false} endAdornment={
                                     <IconButton onClick={handleClear}>
                                         <CancelIcon sx={styles.icon} />
                                     </IconButton>
-                                } type="text" sx={styles.text} placeholder="Login" value={login} onChange={handleLogin} />
+                                } type="email" sx={styles.text} placeholder="Login" value={login} onChange={handleLogin} />
                                 <Typography color="error" variant="caption" sx={{marginBottom: 2}}>
-                                {
-                                    loginError && "Invalid login"
-                                }
+                                { loginError }
                                 </Typography>
-                                <InputBase error={passwordError} endAdornment={
+                                <InputBase error={passwordError ? true : false} endAdornment={
                                     <IconButton onClick={handleVisible}>
                                     {
                                         !isVisible && <VisibleIcon sx={styles.icon} />
@@ -125,9 +141,7 @@ function Page() {
                                     </IconButton>
                                 } type={isVisible ? "text" : "password"} sx={styles.text} placeholder="Password" value={password} onChange={handlePassword} />
                                 <Typography color="error" variant="caption" sx={{marginBottom: 2}}>
-                                {
-                                    passwordError && "Invalid password"
-                                }
+                                { passwordError }
                                 </Typography>
                                 <FormControlLabel value={isRemember} onChange={e => setIsRemember(e.target.checked)} sx={{marginBottom: 3}} control={<Checkbox />} label="Remember Me" />
                                 <Button onClick={handleSignIn} sx={styles.button} variant="contained">Sign In</Button>
@@ -136,9 +150,8 @@ function Page() {
                         </Box>
                     </Paper>
                 </Box>
-            </Grid>
-            <Grid item xs={0} sm={3}></Grid>
-        </Grid>
+            </Box>
+        </Box>
     )
 }
 

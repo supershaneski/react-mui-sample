@@ -201,18 +201,4 @@ function Main(props) {
     )
 }
 
-/*
-const styles = {
-    text: {
-        color: '#000',
-    },
-    image: {
-        backgroundColor: 'red',
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-    }
-}
-*/
-
 export default Main

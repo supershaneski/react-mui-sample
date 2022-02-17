@@ -2,14 +2,13 @@ import React from 'react'
 import { getLoginCredentials } from '../lib/utils'
 import LayoutWithMenu from '../layout/layoutwithmenu'
 import withLayout from '../layout/withLayout'
-import Main from '../components/main'
+import AboutUs from '../components/aboutus'
 
 function Page() {
 
     const [loaded, setLoaded] = React.useState(false)
     const [openDrawer, setOpenDrawer] = React.useState(false)
-
-
+    
     React.useEffect(() => {
 
         const login = getLoginCredentials()
@@ -49,7 +48,7 @@ function Page() {
                 isDrawerOpen={openDrawer}
                 onDrawerClose={() => handleDrawer(false)}
             >
-                <Main onMenuOpen={() => handleDrawer(true)} />
+                <AboutUs onMenuOpen={() => handleDrawer(true)} />
             </LayoutWithMenu>
         </>
     )
